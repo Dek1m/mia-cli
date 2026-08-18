@@ -77,6 +77,12 @@ class CliModule(ModuleBase):
     def version(self) -> str:
         return MODULE_VERSION
 
+    @property
+    def meta(self) -> ModuleMeta:
+        return ModuleMeta(
+            dependencies=["apiproxy"],
+        )
+
     def __init__(self, config: CliConfig | None = None) -> None:
         self._config = config or CliConfig.from_env()
         self._parser: CliParser | None = None
