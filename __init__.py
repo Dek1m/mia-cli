@@ -80,7 +80,7 @@ class CliModule(ModuleBase):
     @property
     def meta(self) -> ModuleMeta:
         return ModuleMeta(
-            dependencies=["apiproxy"],
+            dependencies=["log", "apiproxy"],
         )
 
     def __init__(self, config: CliConfig | None = None) -> None:
