@@ -10,10 +10,6 @@ import sys
 from dataclasses import dataclass, field
 from typing import Any
 
-from argenta_logging import get_logger
-
-log = get_logger(__name__)
-
 __all__ = ["CliParser", "Command"]
 
 
@@ -34,8 +30,9 @@ class CliParser:
     - Определения secret-полей
     """
 
-    def __init__(self, registry: Any | None = None) -> None:
+    def __init__(self, registry: Any | None = None, log: Any | None = None) -> None:
         self._registry = registry
+        self._log = log
 
     def parse(self, argv: list[str]) -> Command:
         """Разобрать аргументы командной строки.

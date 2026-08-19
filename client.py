@@ -14,11 +14,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from argenta_logging import get_logger
-
 from .config import CliConfig
-
-log = get_logger(__name__)
 
 __all__ = ["ApiClient"]
 
@@ -30,9 +26,11 @@ class ApiClient:
         self,
         config: CliConfig,
         proxy_provider: Any | None = None,
+        log: Any | None = None,
     ) -> None:
         self._config = config
         self._proxy_provider = proxy_provider
+        self._log = log
         self._token: str | None = None
         self._load_token()
 
@@ -63,7 +61,8 @@ class ApiClient:
             encoding="utf-8",
         )
         self._token = token
-        log.info("token_saved", path=str(token_path))
+        if self._log is not None:
+            self._log.info("token_saved", path=str(token_path))
 
     def _clear_token(self) -> None:
         """Удалить токен."""

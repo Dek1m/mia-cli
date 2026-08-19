@@ -11,23 +11,20 @@ import asyncio
 import sys
 from typing import Any
 
-from argenta_logging import get_logger
-
 from .config import CliConfig
 from .parser import CliParser
 from .client import ApiClient, format_response
 
-log = get_logger(__name__)
-
 __all__ = ["main"]
 
 
-def main(argv: list[str] | None = None, registry: Any | None = None) -> int:
+def main(argv: list[str] | None = None, registry: Any | None = None, log: Any | None = None) -> int:
     """Точка входа CLI.
 
     Args:
         argv: Аргументы командной строки (по умолчанию sys.argv[1:]).
         registry: MethodRegistry для help и валидации (опционально).
+        log: Log facade (optional).
 
     Returns:
         Код возврата: 0 — успех, 1 — ошибка, 2 — ошибка парсинга.
@@ -36,8 +33,8 @@ def main(argv: list[str] | None = None, registry: Any | None = None) -> int:
         argv = sys.argv[1:]
 
     config = CliConfig.from_env()
-    parser = CliParser(registry=registry)
-    client = ApiClient(config=config)
+    parser = CliParser(registry=registry, log=log)
+    client = ApiClient(config=config, log=log)
 
     # Парсинг (parser.parse может бросить SystemExit для help)
     try:
@@ -51,7 +48,8 @@ def main(argv: list[str] | None = None, registry: Any | None = None) -> int:
             client.call(command.module, command.method, command.args)
         )
     except Exception as e:
-        log.error("cli_call_error %s %s %s", command.module, command.method, str(e))
+        if log is not None:
+            log.error("cli_call_error %s %s %s", command.module, command.method, str(e))
         print(f"ОШИБКА: {e}", file=sys.stderr)
         return 1
 

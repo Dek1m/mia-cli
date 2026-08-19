@@ -53,10 +53,6 @@ __all__ = [
     "ApiClient",
 ]
 
-from argenta_logging import get_logger
-
-log = get_logger(__name__)
-
 MODULE_VERSION = "1.0.0"
 
 
@@ -87,16 +83,19 @@ class CliModule(ModuleBase):
         self._config = config or CliConfig.from_env()
         self._parser: CliParser | None = None
         self._client: ApiClient | None = None
+        self._log = None
 
     def on_load(self, state: Any) -> None:
         """Инициализация модуля."""
+        self._log = state.log
+
         # Получаем ApiProxyProvider из DI (если доступен)
         proxy_provider = None
         try:
             from modules.apiproxy.provider import ApiProxyProvider
             proxy_provider = state.services.resolve(ApiProxyProvider)
         except Exception:
-            log.warning("ApiProxyProvider not found in DI — CLI будет работать в HTTP режиме")
+            self._log.warning("ApiProxyProvider not found in DI — CLI будет работать в HTTP режиме")
 
         # Создаём парсер и клиент
         self._parser = CliParser(registry=proxy_provider.registry if proxy_provider else None)
@@ -105,7 +104,7 @@ class CliModule(ModuleBase):
             proxy_provider=proxy_provider,
         )
 
-        log.info(
+        self._log.info(
             "cli_module_loaded",
             version=self.version,
             mode=self._config.mode,
@@ -114,4 +113,5 @@ class CliModule(ModuleBase):
     def on_unload(self) -> None:
         self._parser = None
         self._client = None
-        log.info("cli_module_unloaded")
+        self._log.info("cli_module_unloaded")
+        self._log = None
