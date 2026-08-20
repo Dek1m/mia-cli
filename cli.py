@@ -49,7 +49,15 @@ def main(argv: list[str] | None = None, registry: Any | None = None, log: Any | 
         )
     except Exception as e:
         if log is not None:
-            log.error("cli_call_error %s %s %s", command.module, command.method, str(e))
+            log.error(
+                "cli_call_error",
+                extra={
+                    "module": command.module,
+                    "method": command.method,
+                    "error_type": type(e).__name__,
+                    "error": str(e),
+                },
+            )
         print(f"ОШИБКА: {e}", file=sys.stderr)
         return 1
 

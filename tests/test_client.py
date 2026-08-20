@@ -5,7 +5,6 @@ import asyncio
 import json
 import pytest
 from pathlib import Path
-from unittest.mock import patch
 
 from cli.client import ApiClient, format_response
 from cli.config import CliConfig
@@ -16,19 +15,19 @@ class TestApiClientLocal:
 
     def test_call_public_method(self, fake_proxy_provider):
         """Вызов публичного метода."""
-        client = ApiClient(config=CliConfig(mode="local"), proxy_provider=fake_proxy_provider)
+        client = ApiClient(config=CliConfig(), proxy_provider=fake_proxy_provider)
         result = asyncio.run(client.call("auth", "login", {"username": "admin", "password": "pass"}))
         assert result["error"] is None
         assert result["data"]["access_token"] == "fake-token"
 
     def test_call_without_provider(self):
-        client = ApiClient(config=CliConfig(mode="local"), proxy_provider=None)
+        client = ApiClient(config=CliConfig(), proxy_provider=None)
         result = asyncio.run(client.call("auth", "login", {"username": "admin"}))
         assert result["error"] is not None
         assert result["error"]["status_code"] == 503
 
     def test_call_method_not_found(self, fake_proxy_provider):
-        client = ApiClient(config=CliConfig(mode="local"), proxy_provider=fake_proxy_provider)
+        client = ApiClient(config=CliConfig(), proxy_provider=fake_proxy_provider)
         result = asyncio.run(client.call("auth", "nonexistent", {}))
         assert result["error"] is not None
         assert result["error"]["status_code"] == 404
@@ -106,7 +105,7 @@ class TestApiClientAuth:
 
     def test_token_sent_with_request(self, fake_proxy_provider, fake_auth_provider):
         """Токен передаётся в запросе — защищённый метод работает."""
-        client = ApiClient(config=CliConfig(mode="local"), proxy_provider=fake_proxy_provider)
+        client = ApiClient(config=CliConfig(), proxy_provider=fake_proxy_provider)
         # Регистрируем токен в fake auth provider
         fake_auth_provider.register_token("my-token", "user-1")
         client._save_token("my-token")
@@ -116,7 +115,7 @@ class TestApiClientAuth:
 
     def test_401_triggers_login_prompt(self, fake_proxy_provider, fake_auth_provider):
         """При 401 клиент пытается предложить login (мокаем prompt)."""
-        client = ApiClient(config=CliConfig(mode="local"), proxy_provider=fake_proxy_provider)
+        client = ApiClient(config=CliConfig(), proxy_provider=fake_proxy_provider)
         # Мокаем _prompt_login чтобы он вернул токен и обновил self._token
         def mock_prompt():
             client._token = "new-login-token"

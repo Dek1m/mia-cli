@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from modules_system.module_base import ModuleBase
+from modules_system.module_base import ModuleBase, ModuleMeta
 
 # Relative imports с fallback для pytest
 try:
@@ -61,7 +61,7 @@ class CliModule(ModuleBase):
 
     Предоставляет:
     - Разбор аргументов командной строки
-    - Вызов методов через apiproxy (local или http режим)
+    - Вызов методов через apiproxy
     - Автогенерацию help из реестра методов
     """
 
@@ -95,7 +95,7 @@ class CliModule(ModuleBase):
             from modules.apiproxy.provider import ApiProxyProvider
             proxy_provider = state.services.resolve(ApiProxyProvider)
         except Exception:
-            self._log.warning("ApiProxyProvider not found in DI — CLI будет работать в HTTP режиме")
+            self._log.warning("ApiProxyProvider not found in DI")
 
         # Создаём парсер и клиент
         self._parser = CliParser(registry=proxy_provider.registry if proxy_provider else None)
@@ -104,11 +104,7 @@ class CliModule(ModuleBase):
             proxy_provider=proxy_provider,
         )
 
-        self._log.info(
-            "cli_module_loaded",
-            version=self.version,
-            mode=self._config.mode,
-        )
+        self._log.info("cli_module_loaded", version=self.version)
 
     def on_unload(self) -> None:
         self._parser = None

@@ -26,18 +26,12 @@ mia auth --help
 mia auth login --help
 ```
 
-## Режимы работы
-
-- **local** (по умолчанию): прямой вызов через ApiProxyProvider
-- **http**: HTTP запросы к REST API (будущая Фаза 3b)
+Вызов идёт напрямую через ApiProxyProvider. HTTP-транспорта нет.
 
 ## Конфигурация
 
 | Переменная | Дефолт | Описание |
 |---|---|---|
-| `MIA_CLI_MODE` | `local` | Режим работы (local/http) |
-| `MIA_CLI_BASE_URL` | `http://localhost:8000/api/v1` | Base URL REST API |
-| `MIA_CLI_TIMEOUT` | `30` | Таймаут запросов (сек) |
 | `MIA_CLI_TOKEN_FILE` | `~/.mia/token` | Файл токена |
 
 ## Exit codes

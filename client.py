@@ -1,13 +1,10 @@
 """ApiClient — вызов API-методов через apiproxy.
 
-Два режима:
-- local: прямой вызов ApiProxyProvider.call (по умолчанию)
-- http: HTTP запросы к REST API (для будущей Фазы 3b)
-
-Токен хранится в файле (~/.mia/token).
+Прямой вызов ApiProxyProvider.call. Токен — файл ~/.mia/token.
 """
 from __future__ import annotations
 
+import asyncio
 import getpass
 import json
 import sys
@@ -119,9 +116,8 @@ class ApiClient:
 
         При 401 — автоматически предлагает login.
         """
-        result = await self._call_with_retry(module, method, kwargs)
+        result = await self._call_local(module, method, kwargs)
 
-        # Обработка 401 — повторный запрос с login
         error = result.get("error")
         if error and error.get("status_code") == 401:
             print("Токен недействителен или отсутствует", file=sys.stderr)
@@ -130,17 +126,6 @@ class ApiClient:
                 result = await self._call_local(module, method, kwargs)
 
         return result
-
-    async def _call_with_retry(
-        self,
-        module: str,
-        method: str,
-        kwargs: dict[str, Any],
-    ) -> dict[str, Any]:
-        """Вызов с автоматическим обновлением токена."""
-        if self._config.mode == "http":
-            return await self._call_http(module, method, kwargs)
-        return await self._call_local(module, method, kwargs)
 
     async def _call_local(
         self,
@@ -165,53 +150,6 @@ class ApiClient:
             kwargs=kwargs,
             token=self._token,
         )
-
-    async def _call_http(
-        self,
-        module: str,
-        method: str,
-        kwargs: dict[str, Any],
-    ) -> dict[str, Any]:
-        """HTTP запрос к REST API (для будущей Фазы 3b)."""
-        try:
-            import httpx
-        except ImportError:
-            return {
-                "data": None,
-                "error": {
-                    "code": "DEPENDENCY_MISSING",
-                    "message": "httpx не установлен. Используйте режим 'local' или установите httpx.",
-                    "status_code": 500,
-                },
-            }
-
-        url = f"{self._config.base_url}/{module}/{method}"
-        headers = {}
-        if self._token:
-            headers["Authorization"] = f"Bearer {self._token}"
-
-        try:
-            async with httpx.AsyncClient(timeout=self._config.timeout) as client:
-                response = await client.post(url, json=kwargs, headers=headers)
-                return response.json()
-        except httpx.TimeoutException:
-            return {
-                "data": None,
-                "error": {
-                    "code": "TIMEOUT",
-                    "message": f"Таймаут запроса ({self._config.timeout}с)",
-                    "status_code": 408,
-                },
-            }
-        except httpx.RequestError as e:
-            return {
-                "data": None,
-                "error": {
-                    "code": "NETWORK_ERROR",
-                    "message": f"Ошибка сети: {e}",
-                    "status_code": 502,
-                },
-            }
 
 
 def format_response(result: dict[str, Any], output_format: str = "json") -> str:
