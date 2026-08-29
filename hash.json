@@ -3,7 +3,7 @@
   "files": {
     "__init__.py": "022e2e6d723886f0fd11f500f0a8c4450c1121f764cea99ae6628236eec13e10",
     "cli.py": "fb544cb9ea8497936820c59178267265099e60b4346ea2915eb3577f65ca2b19",
-    "client.py": "d680c6d31bdc0db8a11fe024a93ebbfe9549ab2a2f3633b799fcb34acd0ccc17",
+    "client.py": "63c3db742537c11ace8915815a625e334d62efe699f0ad00729851ab462b0a9d",
     "config.py": "ad2be8eb28b8dc08cb4b7d040e6374827b7c1e2c605c2dd70a7d5746c6eb0ced",
     "parser.py": "6374d46d9858673ecbb5bb699fbaaadc4012beb00689c9f80182a4805a6e9e42",
     "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -12,5 +12,5 @@
     "tests/test_client.py": "d02f4b632c3922bd1885fdc74d81dfab9c53c960c5a52c14d2642d599bdfa0b5",
     "tests/test_parser.py": "ad298a4105bb0f6001059ea0bba2d5d190e3551c37c34b625a890786e9a7e4e8"
   },
-  "manifest_hash": "a1a66b61cfcb90c5ad09979a9f56885dcae311c8545b2670aedd5d3bd2519873"
+  "manifest_hash": "8a7329c90642b95fc8eca29939b384eb24406725a7ff6ff92698c5cbfdfc1981"
 }

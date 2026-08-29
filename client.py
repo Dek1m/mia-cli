@@ -59,7 +59,7 @@ class ApiClient:
         )
         self._token = token
         if self._log is not None:
-            self._log.info("token_saved", path=str(token_path))
+            self._log.info("token_saved", extra={"path": str(token_path)})
 
     def _clear_token(self) -> None:
         """Удалить токен."""
