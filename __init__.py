@@ -77,6 +77,10 @@ class CliModule(ModuleBase):
     def meta(self) -> ModuleMeta:
         return ModuleMeta(
             dependencies=["log", "apiproxy"],
+            load_on="all",
+            is_system=False,
+            display_name="CLI",
+            is_example=True,
         )
 
     def __init__(self, config: CliConfig | None = None) -> None:
