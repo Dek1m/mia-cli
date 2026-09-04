@@ -4,7 +4,7 @@
     "__init__.py": "9d167f5187eddb6573e5f6b1db85b2932b620b6a72065b554b7d9bb2a67bd07d",
     "cli.py": "1eca86f2c31f0fbb04bc3144c7f66d2aa4ffa9d11e1041a77fd306a4c1facada",
     "client.py": "63c3db742537c11ace8915815a625e334d62efe699f0ad00729851ab462b0a9d",
-    "config.py": "1f9194c981228c7423ae633148cd9740757eb6b78751a05fdf180fe19206c5e6",
+    "config.py": "71c64a70d436a688a91277790796a6796a7c352ebdc8f9c799559671802817fa",
     "parser.py": "e833f781b84f08df5bd31e9c413865dad529cda90274e5eaa6756f19608e9938",
     "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "tests/conftest.py": "612c854f5251c6bd81f337ccb4833929ba3ea61d97d72983d160988ffa4ec372",
@@ -12,5 +12,5 @@
     "tests/test_client.py": "716dd397de58c8dce4003d9d9d58c0abfcb29f6ca8e482f8c85577ca0283efc3",
     "tests/test_parser.py": "ad298a4105bb0f6001059ea0bba2d5d190e3551c37c34b625a890786e9a7e4e8"
   },
-  "manifest_hash": "7fb2de6484c717bbfff20276bae9bef0d5c6c9574db60ab7dc8e71591ddb4f2d"
+  "manifest_hash": "945c7754562617183d9bf149343ae2cfb1245f1a89875cb8ed1a653eb4a9c93b"
 }
