@@ -132,13 +132,19 @@ def fake_registry() -> MethodRegistry:
     async def _login(username: str = "", password: str = "") -> dict[str, Any]:
         return {"access_token": "fake-token", "user_id": "user-1"}
 
-    async def _list_users(offset: int = 0, limit: int = 100) -> list[dict[str, Any]]:
+    # _session_user_id обязателен в сигнатуре: converter._inject_session кладёт
+    # его в kwargs каждого авторизованного вызова (как в реальных провайдерах).
+    async def _list_users(
+        offset: int = 0, limit: int = 100, _session_user_id: str | None = None,
+    ) -> list[dict[str, Any]]:
         return [{"id": "user-1", "username": "admin"}]
 
-    async def _create_user(username: str = "", password: str = "") -> dict[str, Any]:
+    async def _create_user(
+        username: str = "", password: str = "", _session_user_id: str | None = None,
+    ) -> dict[str, Any]:
         return {"id": "new-user", "username": username}
 
-    async def _get_me() -> dict[str, Any]:
+    async def _get_me(_session_user_id: str | None = None) -> dict[str, Any]:
         return {"id": "user-1", "username": "admin"}
 
     registry.register("auth", "login", {
